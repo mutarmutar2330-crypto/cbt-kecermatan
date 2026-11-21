@@ -1,0 +1,2011 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT Simulasi Tes Kecermatan Polri/TNI — 500 Soal</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Konfigurasi Tailwind untuk Tema CAT Resmi -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            950: '#080e1a',
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        /* Pengaturan dasar tipografi dan mencegah seleksi teks tak sengaja saat klik cepat */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #f1f5f9;
+            color: #0f172a;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Animasi transisi cepat antar soal agar perpindahan soal tetap terasa nyata tanpa memperlambat peserta */
+        @keyframes questionPop {
+            0% {
+                opacity: 0.45;
+                transform: translateY(3px) scale(0.985);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .animate-question-pop {
+            animation: questionPop 0.11s ease-out forwards;
+        }
+
+        /* Animasi denyut kritis untuk timer < 10 detik */
+        @keyframes criticalPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+                transform: scale(1.03);
+            }
+        }
+
+        .timer-critical {
+            animation: criticalPulse 0.85s infinite;
+        }
+
+        /* Efek tekan tombol jawaban CAT */
+        .answer-btn {
+            transition: transform 0.06s ease, background-color 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease;
+        }
+        .answer-btn:active,
+        .answer-btn.key-pressed {
+            transform: scale(0.95);
+            background-color: #0f172a !important;
+            color: #ffffff !important;
+            border-color: #d97706 !important;
+        }
+
+        /* Pengaturan cetak / ekspor PDF yang bersih untuk Laporan Evaluasi */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 12mm;
+            }
+            body {
+                background-color: #ffffff !important;
+                color: #0f172a !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-break-avoid {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            .print-shadow-none {
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col overflow-x-hidden selection:bg-amber-200 selection:text-navy-900">
+
+    <!-- ===================================================================== -->
+    <!-- 1. LAYAR AWAL (HALAMAN BRIEFING & IDENTITAS PESERTA)                  -->
+    <!-- ===================================================================== -->
+    <div id="screen-start" class="min-h-screen flex flex-col">
+        <!-- Header Resmi CAT -->
+        <header class="bg-navy-900 text-white border-b-4 border-gold-600 shadow-lg">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-3.5">
+                    <!-- Ikon Perisai CAT Resmi (Inline SVG) -->
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gold-500 to-gold-700 flex items-center justify-center shadow-md shrink-0">
+                        <svg class="w-7 h-7 text-navy-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/>
+                            <path d="M9 12l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="inline-block text-[11px] font-bold tracking-widest uppercase text-gold-400">
+                            Computer Assisted Test (CAT) — Psikologi
+                        </span>
+                        <h1 class="text-lg sm:text-2xl font-extrabold tracking-tight text-white">
+                            Simulasi Tes Kecermatan Polri / TNI
+                        </h1>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 bg-navy-800/90 border border-slate-700 px-3.5 py-1.5 rounded-lg text-xs text-slate-300">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span>Standar 500 Soal • 10 Kolom</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Konten Utama Halaman Awal -->
+        <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+            <!-- Kartu Ringkasan Aturan Tes -->
+            <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Soal</p>
+                    <p class="mt-1 text-2xl sm:text-3xl font-extrabold text-navy-900">500 <span class="text-sm font-semibold text-slate-500">Soal</span></p>
+                    <p class="mt-1 text-xs text-slate-500">10 Kolom × 50 Soal</p>
+                </div>
+                <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Durasi Per Kolom</p>
+                    <p class="mt-1 text-2xl sm:text-3xl font-extrabold text-navy-900">1,5 <span class="text-sm font-semibold text-slate-500">Menit</span></p>
+                    <p class="mt-1 text-xs text-slate-500">90 detik / kolom (maks 15 mnt)</p>
+                </div>
+                <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Skoring Benar</p>
+                    <p class="mt-1 text-2xl sm:text-3xl font-extrabold text-emerald-600">+0,20 <span class="text-sm font-semibold text-slate-500">Poin</span></p>
+                    <p class="mt-1 text-xs text-slate-500">Skor maksimal 100,00</p>
+                </div>
+                <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Salah / Kosong</p>
+                    <p class="mt-1 text-2xl sm:text-3xl font-extrabold text-slate-700">0 <span class="text-sm font-semibold text-slate-500">Poin</span></p>
+                    <p class="mt-1 text-xs text-slate-500">Tidak ada sistem minus</p>
+                </div>
+            </section>
+
+            <!-- Grid Identitas & Komposisi Kolom -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Formulir Identitas Peserta (Opsional) -->
+                <section class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+                            <div class="w-8 h-8 rounded-lg bg-navy-900 text-gold-400 flex items-center justify-center font-bold text-sm">
+                                1
+                            </div>
+                            <div>
+                                <h2 class="text-base font-bold text-navy-900">Identitas Peserta</h2>
+                                <p class="text-xs text-slate-500">Opsional — dicantumkan pada laporan evaluasi</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 space-y-4">
+                            <div>
+                                <label for="input-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
+                                    Nama Lengkap Peserta
+                                </label>
+                                <input
+                                    id="input-name"
+                                    type="text"
+                                    placeholder="Contoh: Bripda Pratama Wijaya (Opsional)"
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-navy-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-600 transition"
+                                >
+                            </div>
+                            <div>
+                                <label for="input-id" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
+                                    Nomor Peserta / No. Casis
+                                </label>
+                                <input
+                                    id="input-id"
+                                    type="text"
+                                    placeholder="Contoh: 031204/P/0045 (Opsional)"
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-navy-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-600 transition"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Mulai Tes -->
+                    <div class="mt-6 pt-5 border-t border-slate-100">
+                        <button
+                            id="btn-start-exam"
+                            type="button"
+                            class="w-full py-3.5 px-5 rounded-xl bg-navy-900 hover:bg-navy-800 active:scale-[0.99] text-white font-bold text-base shadow-md hover:shadow-lg border-b-4 border-gold-600 flex items-center justify-center gap-2.5 transition cursor-pointer"
+                        >
+                            <span>Mulai Tes Kecermatan</span>
+                            <svg class="w-5 h-5 text-gold-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                <polyline points="12 5 19 12 12 19"/>
+                            </svg>
+                        </button>
+                        <p class="mt-2.5 text-center text-[11px] text-slate-500">
+                            Timer Kolom 1 (01:30) langsung berjalan setelah tombol ditekan.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Komposisi 10 Kolom & Panduan Pengerjaan -->
+                <section class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
+                    <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+                        <div class="w-8 h-8 rounded-lg bg-navy-900 text-gold-400 flex items-center justify-center font-bold text-sm">
+                            2
+                        </div>
+                        <div>
+                            <h2 class="text-base font-bold text-navy-900">Komposisi 10 Kolom & Panduan CAT</h2>
+                            <p class="text-xs text-slate-500">Mengukur kecepatan, ketelitian, dan ketahanan kerja peserta</p>
+                        </div>
+                    </div>
+
+                    <!-- Tabel Ringkas Komposisi 10 Kolom -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200/80">
+                            <div>
+                                <span class="text-xs font-bold text-navy-900">Kolom 1 & 2 — Huruf</span>
+                                <p class="text-[11px] text-slate-500">5 huruf kapital mirip visual (diacak)</p>
+                            </div>
+                            <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-navy-900 text-gold-400">100 Soal</span>
+                        </div>
+                        <div class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200/80">
+                            <div>
+                                <span class="text-xs font-bold text-navy-900">Kolom 3 & 4 — Angka</span>
+                                <p class="text-[11px] text-slate-500">Kombinasi 5 angka berbeda per kolom</p>
+                            </div>
+                            <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-navy-900 text-gold-400">100 Soal</span>
+                        </div>
+                        <div class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200/80">
+                            <div>
+                                <span class="text-xs font-bold text-navy-900">Kolom 5 & 6 — Simbol</span>
+                                <p class="text-[11px] text-slate-500">Simbol tipografi & matematika tajam</p>
+                            </div>
+                            <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-navy-900 text-gold-400">100 Soal</span>
+                        </div>
+                        <div class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200/80">
+                            <div>
+                                <span class="text-xs font-bold text-navy-900">Kolom 7 & 8 — Gambar</span>
+                                <p class="text-[11px] text-slate-500">Bentuk geometris & ikon psikotes SVG</p>
+                            </div>
+                            <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-navy-900 text-gold-400">100 Soal</span>
+                        </div>
+                        <div class="sm:col-span-2 flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-amber-50/70 border border-amber-200">
+                            <div>
+                                <span class="text-xs font-bold text-navy-900">Kolom 9 & 10 — Campuran</span>
+                                <p class="text-[11px] text-slate-600">Kombinasi Huruf, Angka, Simbol, dan Gambar SVG dalam satu tabel kunci</p>
+                            </div>
+                            <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-gold-600 text-white shrink-0">100 Soal</span>
+                        </div>
+                    </div>
+
+                    <!-- Panduan Cara Mengerjakan -->
+                    <div class="rounded-xl bg-navy-900 text-slate-100 p-4 space-y-2.5">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-gold-400 flex items-center gap-1.5">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                            </svg>
+                            Petunjuk Pengerjaan (Metode Hilang 1)
+                        </h3>
+                        <ul class="text-xs sm:text-[13px] text-slate-300 space-y-1.5 leading-relaxed list-disc pl-4">
+                            <li>Setiap kolom menampilkan <strong class="text-white">Tabel Kunci Referensi</strong> berisi 5 item (berlabel <strong class="text-gold-400">A, B, C, D, E</strong>).</li>
+                            <li>Setiap nomor soal menampilkan <strong class="text-white">4 item secara acak</strong>. Temukan <strong class="text-gold-400">1 item yang HILANG</strong>, lalu pilih huruf pasangannya.</li>
+                            <li>Gunakan klik mouse, sentuh layar, atau shortcut keyboard <kbd class="px-1.5 py-0.5 bg-navy-800 border border-slate-600 rounded text-[11px] font-mono text-gold-400">A–E</kbd> / <kbd class="px-1.5 py-0.5 bg-navy-800 border border-slate-600 rounded text-[11px] font-mono text-gold-400">1–5</kbd> untuk kecepatan maksimal.</li>
+                            <li>Setelah menjawab, sistem otomatis berpindah ke soal berikutnya tanpa menampilkan kunci jawaban.</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer class="py-4 text-center text-xs text-slate-500 border-t border-slate-200 bg-white">
+            Perangkat Evaluasi Penguji • Simulasi CAT Tes Kecermatan Polri / TNI (500 Soal)
+        </footer>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- 2. LAYAR UJIAN AKTIF (CBT WORKSPACE)                                  -->
+    <!-- ===================================================================== -->
+    <div id="screen-exam" class="hidden min-h-screen flex flex-col bg-slate-100">
+        <!-- Header Ujian Tetap di Atas -->
+        <header class="sticky top-0 z-30 bg-navy-900 text-white border-b-4 border-gold-600 shadow-md">
+            <div class="max-w-6xl mx-auto px-3 sm:px-5 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-2 sm:gap-4">
+                <!-- Informasi Kolom & Peserta -->
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-9 h-9 rounded-lg bg-gold-600 text-navy-900 font-black text-sm flex items-center justify-center shrink-0 shadow">
+                        <span id="exam-col-num-short">K1</span>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span id="exam-col-title" class="text-sm sm:text-base font-extrabold tracking-tight text-white">
+                                Kolom 1 / 10
+                            </span>
+                            <span id="exam-col-category" class="px-2 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-gold-500/20 text-gold-400 border border-gold-500/40">
+                                HURUF
+                            </span>
+                        </div>
+                        <p id="exam-participant-label" class="text-[11px] text-slate-400 truncate max-w-[180px] sm:max-w-xs">
+                            Peserta Simulasi
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Timer Hitung Mundur Utama -->
+                <div id="timer-container" class="flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-xl bg-navy-800 border-2 border-slate-600 transition-colors">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gold-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <div class="leading-none">
+                        <span class="block text-[9px] uppercase tracking-widest text-slate-400 font-semibold">Sisa Waktu</span>
+                        <span id="exam-timer" class="text-xl sm:text-2xl font-black tabular-nums tracking-wider text-white">01:30</span>
+                    </div>
+                </div>
+
+                <!-- Kontrol Khusus Penguji -->
+                <div class="flex items-center gap-2 ml-auto sm:ml-0">
+                    <button
+                        id="btn-skip-column"
+                        type="button"
+                        title="Kontrol Penguji: Lewati kolom saat ini ke kolom berikutnya"
+                        class="px-2.5 sm:px-3 py-2 rounded-lg bg-navy-800 hover:bg-navy-700 border border-slate-600 text-[11px] sm:text-xs font-semibold text-slate-200 flex items-center gap-1.5 transition cursor-pointer"
+                    >
+                        <svg class="w-3.5 h-3.5 text-gold-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="5 4 15 12 5 20 5 4"/>
+                            <line x1="19" y1="5" x2="19" y2="19"/>
+                        </svg>
+                        <span>Lewati Kolom</span>
+                    </button>
+                    <button
+                        id="btn-finish-early"
+                        type="button"
+                        title="Kontrol Penguji: Akhiri tes sekarang dan tampilkan laporan skor"
+                        class="px-2.5 sm:px-3 py-2 rounded-lg bg-amber-600/20 hover:bg-amber-600/35 border border-amber-500/60 text-[11px] sm:text-xs font-bold text-amber-300 flex items-center gap-1.5 transition cursor-pointer"
+                    >
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 11l3 3L22 4"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                        <span>Selesaikan & Lihat Skor</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bar Progres 10 Kolom -->
+            <div class="bg-navy-950/70 border-t border-slate-800">
+                <div class="max-w-6xl mx-auto px-3 sm:px-5 py-1.5 flex items-center justify-between gap-3">
+                    <div id="column-stepper" class="flex-1 grid grid-cols-10 gap-1 sm:gap-1.5">
+                        <!-- Diisi dinamis oleh JS -->
+                    </div>
+                    <span id="exam-overall-progress" class="text-[11px] font-semibold text-slate-400 tabular-nums shrink-0 hidden sm:inline">
+                        Total Dijawab: 0 / 500
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Area Kerja Ujian Utama -->
+        <main class="flex-1 max-w-4xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-6 flex flex-col justify-center gap-4 sm:gap-5">
+
+            <!-- 1. TABEL KUNCI REFERENSI (5 ITEM: A - E) -->
+            <section class="bg-white rounded-2xl border-2 border-navy-900/15 shadow-sm overflow-hidden">
+                <div class="bg-navy-900 px-4 py-2 flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-widest text-gold-400">
+                        Tabel Kunci Referensi
+                    </span>
+                    <span id="ref-table-subtitle" class="text-xs font-semibold text-slate-300">
+                        Kolom 1 — Kategori Huruf
+                    </span>
+                </div>
+
+                <div id="reference-grid" class="grid grid-cols-5 divide-x divide-slate-200">
+                    <!-- 5 Sel Referensi dirender oleh JS -->
+                </div>
+            </section>
+
+            <!-- 2. KARTU SOAL AKTIF (4 ITEM ACAK — CARI 1 YANG HILANG) -->
+            <section class="bg-white rounded-2xl border border-slate-200 shadow-md p-4 sm:p-6">
+                <!-- Bar Nomor Soal & Progress Kolom -->
+                <div class="flex items-center justify-between gap-3 mb-3 sm:mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="px-3 py-1 rounded-lg bg-navy-900 text-white text-xs sm:text-sm font-extrabold tabular-nums">
+                            SOAL <span id="exam-q-num">1</span> / 50
+                        </span>
+                        <span class="text-xs font-medium text-slate-500 hidden sm:inline">
+                            Temukan 1 item yang <strong>HILANG</strong> dari tabel kunci
+                        </span>
+                    </div>
+                    <span id="exam-q-percent" class="text-xs font-bold text-slate-500 tabular-nums">0%</span>
+                </div>
+
+                <!-- Progress Bar Soal Dalam Kolom -->
+                <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mb-5">
+                    <div id="exam-q-bar" class="h-full bg-gradient-to-r from-navy-900 to-gold-600 rounded-full transition-all duration-150" style="width: 2%;"></div>
+                </div>
+
+                <!-- 4 Kotak Item Soal -->
+                <div id="question-items-wrapper" class="py-3 sm:py-5 px-2 sm:px-6 rounded-2xl bg-slate-50 border-2 border-dashed border-slate-300">
+                    <div id="question-items-grid" class="grid grid-cols-4 gap-2 sm:gap-4 max-w-2xl mx-auto">
+                        <!-- 4 Item Soal dirender oleh JS -->
+                    </div>
+                </div>
+
+                <!-- Petunjuk singkat untuk mobile -->
+                <p class="mt-3 text-center text-xs font-medium text-slate-500 sm:hidden">
+                    Pilih huruf (A–E) dari 1 item yang <strong class="text-navy-900">HILANG</strong>:
+                </p>
+
+                <!-- 3. TOMBOL JAWABAN A, B, C, D, E -->
+                <div id="answer-buttons-grid" class="mt-4 sm:mt-6 grid grid-cols-5 gap-2 sm:gap-3.5">
+                    <button type="button" data-option="A" class="answer-btn group py-3 sm:py-4 rounded-xl bg-white hover:bg-navy-900 border-2 border-navy-900/20 hover:border-navy-900 shadow-sm flex flex-col items-center justify-center cursor-pointer select-none">
+                        <span class="text-2xl sm:text-3xl font-black text-navy-900 group-hover:text-white leading-none">A</span>
+                        <span class="mt-1 text-[10px] font-semibold text-slate-400 group-hover:text-gold-400 hidden sm:inline">Key A / 1</span>
+                    </button>
+                    <button type="button" data-option="B" class="answer-btn group py-3 sm:py-4 rounded-xl bg-white hover:bg-navy-900 border-2 border-navy-900/20 hover:border-navy-900 shadow-sm flex flex-col items-center justify-center cursor-pointer select-none">
+                        <span class="text-2xl sm:text-3xl font-black text-navy-900 group-hover:text-white leading-none">B</span>
+                        <span class="mt-1 text-[10px] font-semibold text-slate-400 group-hover:text-gold-400 hidden sm:inline">Key B / 2</span>
+                    </button>
+                    <button type="button" data-option="C" class="answer-btn group py-3 sm:py-4 rounded-xl bg-white hover:bg-navy-900 border-2 border-navy-900/20 hover:border-navy-900 shadow-sm flex flex-col items-center justify-center cursor-pointer select-none">
+                        <span class="text-2xl sm:text-3xl font-black text-navy-900 group-hover:text-white leading-none">C</span>
+                        <span class="mt-1 text-[10px] font-semibold text-slate-400 group-hover:text-gold-400 hidden sm:inline">Key C / 3</span>
+                    </button>
+                    <button type="button" data-option="D" class="answer-btn group py-3 sm:py-4 rounded-xl bg-white hover:bg-navy-900 border-2 border-navy-900/20 hover:border-navy-900 shadow-sm flex flex-col items-center justify-center cursor-pointer select-none">
+                        <span class="text-2xl sm:text-3xl font-black text-navy-900 group-hover:text-white leading-none">D</span>
+                        <span class="mt-1 text-[10px] font-semibold text-slate-400 group-hover:text-gold-400 hidden sm:inline">Key D / 4</span>
+                    </button>
+                    <button type="button" data-option="E" class="answer-btn group py-3 sm:py-4 rounded-xl bg-white hover:bg-navy-900 border-2 border-navy-900/20 hover:border-navy-900 shadow-sm flex flex-col items-center justify-center cursor-pointer select-none">
+                        <span class="text-2xl sm:text-3xl font-black text-navy-900 group-hover:text-white leading-none">E</span>
+                        <span class="mt-1 text-[10px] font-semibold text-slate-400 group-hover:text-gold-400 hidden sm:inline">Key E / 5</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Info Shortcut Bawah -->
+            <div class="text-center text-xs text-slate-500 hidden sm:block">
+                Shortcut Keyboard Aktif: Tekan <strong class="text-navy-900">A, B, C, D, E</strong> atau angka <strong class="text-navy-900">1, 2, 3, 4, 5</strong> untuk menjawab secara instan.
+            </div>
+        </main>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- 3. OVERLAY JEDA ANTAR KOLOM (3 DETIK)                                 -->
+    <!-- ===================================================================== -->
+    <div id="overlay-break" class="hidden fixed inset-0 z-40 bg-navy-950/92 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 sm:p-8 text-center shadow-2xl border-t-4 border-gold-600">
+            <span id="break-reason-badge" class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-100 text-amber-800">
+                Waktu Kolom Habis
+            </span>
+
+            <h2 id="break-heading" class="mt-3 text-xl sm:text-2xl font-extrabold text-navy-900">
+                Kolom 1 Selesai — Persiapan Kolom Berikutnya
+            </h2>
+
+            <div class="mt-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-600">
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kolom Selanjutnya</p>
+                <p id="break-next-info" class="mt-1 text-base font-bold text-navy-900">
+                    Kolom 2 — Kategori Huruf (50 Soal • 01:30)
+                </p>
+            </div>
+
+            <!-- Hitung Mundur Jeda 3 Detik -->
+            <div class="my-6 flex flex-col items-center">
+                <div class="w-20 h-20 rounded-full bg-navy-900 border-4 border-gold-500 flex items-center justify-center shadow-lg">
+                    <span id="break-countdown" class="text-4xl font-black text-white tabular-nums">3</span>
+                </div>
+                <p class="mt-2 text-xs text-slate-500">Dimulai otomatis dalam beberapa detik...</p>
+            </div>
+
+            <button
+                id="btn-break-continue"
+                type="button"
+                class="w-full py-3 px-5 rounded-xl bg-navy-900 hover:bg-navy-800 text-white font-bold text-sm shadow-md border-b-4 border-gold-600 transition cursor-pointer"
+            >
+                Lanjut Sekarang
+            </button>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- 4. MODAL KONFIRMASI KUSTOM (PENGGANTI confirm() / alert())            -->
+    <!-- ===================================================================== -->
+    <div id="modal-confirm" class="hidden fixed inset-0 z-50 bg-navy-950/75 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+            <div class="flex items-start gap-3.5">
+                <div id="modal-icon-box" class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 id="modal-title" class="text-lg font-extrabold text-navy-900">Konfirmasi Penguji</h3>
+                    <p id="modal-message" class="mt-1.5 text-sm text-slate-600 leading-relaxed">
+                        Apakah Anda yakin ingin melanjutkan tindakan ini?
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-6 flex items-center justify-end gap-2.5">
+                <button
+                    id="modal-btn-cancel"
+                    type="button"
+                    class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition cursor-pointer"
+                >
+                    Batal
+                </button>
+                <button
+                    id="modal-btn-ok"
+                    type="button"
+                    class="px-4 py-2.5 rounded-xl bg-navy-900 hover:bg-navy-800 text-white font-bold text-sm border-b-2 border-gold-600 transition cursor-pointer"
+                >
+                    Ya, Lanjutkan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- 5. LAYAR LAPORAN EVALUASI & SKORING AKHIR                             -->
+    <!-- ===================================================================== -->
+    <div id="screen-results" class="hidden min-h-screen flex flex-col bg-slate-100">
+        <!-- Header Laporan Resmi -->
+        <header class="bg-navy-900 text-white border-b-4 border-gold-600 shadow-md">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-gold-500 to-gold-700 flex items-center justify-center shadow shrink-0">
+                        <svg class="w-6 h-6 text-navy-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-[11px] font-bold uppercase tracking-widest text-gold-400">
+                            Laporan Evaluasi Psikologi CAT
+                        </span>
+                        <h1 class="text-lg sm:text-2xl font-extrabold tracking-tight">
+                            Hasil Simulasi Tes Kecermatan Polri / TNI
+                        </h1>
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi Cetak & Simulasi Baru -->
+                <div class="flex flex-wrap items-center gap-2.5 no-print">
+                    <button
+                        id="btn-print-report"
+                        type="button"
+                        class="px-4 py-2.5 rounded-xl bg-gold-600 hover:bg-gold-500 text-navy-950 font-bold text-sm shadow flex items-center gap-2 transition cursor-pointer"
+                    >
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 6 2 18 2 18 9"/>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                            <rect x="6" y="14" width="12" height="8"/>
+                        </svg>
+                        <span>Cetak Laporan / PDF</span>
+                    </button>
+                    <button
+                        id="btn-restart-exam"
+                        type="button"
+                        class="px-4 py-2.5 rounded-xl bg-navy-800 hover:bg-navy-700 border border-slate-600 text-white font-semibold text-sm flex items-center gap-2 transition cursor-pointer"
+                    >
+                        <svg class="w-4 h-4 text-gold-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 4 23 10 17 10"/>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                        </svg>
+                        <span>Mulai Simulasi Baru</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Konten Laporan Evaluasi -->
+        <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+            <!-- Info Peserta & Metadata Sesi -->
+            <section class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm print-shadow-none print-break-avoid">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Nama Peserta</span>
+                        <p id="res-name" class="mt-0.5 font-bold text-navy-900">-</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Nomor Peserta / Casis</span>
+                        <p id="res-id" class="mt-0.5 font-bold text-navy-900 tabular-nums">-</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Tanggal & Waktu Selesai</span>
+                        <p id="res-date" class="mt-0.5 font-semibold text-slate-700">-</p>
+                    </div>
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Ketentuan Skoring</span>
+                        <p class="mt-0.5 font-semibold text-slate-700">Benar = 0,20 • Salah/Kosong = 0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kartu Ringkasan Utama (Skor Akhir + 5 Metrik Utama) -->
+            <section class="grid grid-cols-1 lg:grid-cols-12 gap-4 print-break-avoid">
+                <!-- Kartu Skor Akhir Menonjol -->
+                <div class="lg:col-span-4 bg-navy-900 text-white rounded-2xl p-6 shadow-md border-b-4 border-gold-600 flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-gold-400">Skor Akhir Evaluasi</span>
+                        <div class="mt-2 flex items-baseline gap-2">
+                            <span id="res-final-score" class="text-5xl font-black tabular-nums tracking-tight text-white">0,00</span>
+                            <span class="text-lg font-bold text-slate-400">/ 100,00</span>
+                        </div>
+                    </div>
+                    <div class="mt-5 pt-4 border-t border-slate-700/80 flex items-center justify-between gap-2">
+                        <span class="text-xs text-slate-400 font-medium">Predikat:</span>
+                        <span id="res-predicate-badge" class="px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide bg-gold-500/20 text-gold-400 border border-gold-500/40">
+                            -
+                        </span>
+                    </div>
+                </div>
+
+                <!-- 5 Metrik Pendukung -->
+                <div class="lg:col-span-8 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm print-shadow-none">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Benar</span>
+                        <p id="res-total-correct" class="mt-1.5 text-3xl font-black text-emerald-600 tabular-nums">0</p>
+                        <p id="res-correct-points" class="mt-1 text-xs font-medium text-emerald-700">+0,00 poin</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm print-shadow-none">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Salah</span>
+                        <p id="res-total-wrong" class="mt-1.5 text-3xl font-black text-red-600 tabular-nums">0</p>
+                        <p class="mt-1 text-xs font-medium text-slate-500">0,00 poin</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm print-shadow-none">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Tidak Dijawab</span>
+                        <p id="res-total-unanswered" class="mt-1.5 text-3xl font-black text-slate-600 tabular-nums">0</p>
+                        <p class="mt-1 text-xs font-medium text-slate-500">dari 500 soal</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm print-shadow-none">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Kecepatan Kerja</span>
+                        <p id="res-speed-pct" class="mt-1.5 text-3xl font-black text-navy-900 tabular-nums">0,0%</p>
+                        <p id="res-speed-detail" class="mt-1 text-xs font-medium text-slate-500">0 / 500 terjawab</p>
+                    </div>
+
+                    <div class="col-span-2 bg-white rounded-2xl border border-slate-200 p-4 shadow-sm print-shadow-none flex flex-col justify-between">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Ketelitian / Akurasi</span>
+                            <span id="res-accuracy-pct" class="text-2xl sm:text-3xl font-black text-gold-600 tabular-nums">0,0%</span>
+                        </div>
+                        <div class="mt-2">
+                            <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                                <div id="res-accuracy-bar" class="h-full bg-gradient-to-r from-navy-900 to-gold-500 rounded-full" style="width: 0%;"></div>
+                            </div>
+                            <p class="mt-1.5 text-xs text-slate-500">
+                                Rasio jawaban benar dibandingkan seluruh soal yang berhasil dijawab.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Grafik Performa Ketahanan (Kolom 1 - Kolom 10) -->
+            <section class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm print-shadow-none print-break-avoid">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                    <div>
+                        <h2 class="text-base sm:text-lg font-extrabold text-navy-900">
+                            Grafik Performa Ketahanan & Stabilitas (Kolom 1 – 10)
+                        </h2>
+                        <p class="text-xs text-slate-500">
+                            Perbandingan kurva Jumlah Dijawab (Kecepatan) vs Jumlah Benar (Ketelitian) per kolom
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-4 text-xs font-semibold">
+                        <span class="flex items-center gap-1.5 text-navy-900">
+                            <span class="w-3.5 h-1.5 rounded-full bg-gold-600 inline-block"></span>
+                            Jumlah Dijawab
+                        </span>
+                        <span class="flex items-center gap-1.5 text-navy-900">
+                            <span class="w-3.5 h-1.5 rounded-full bg-navy-900 inline-block"></span>
+                            Jumlah Benar
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Kontainer SVG Chart Responsif + Tooltip -->
+                <div class="relative w-full">
+                    <div id="endurance-chart-container" class="w-full overflow-x-auto">
+                        <!-- SVG grafik dirender dinamis oleh JS -->
+                    </div>
+                    <div id="chart-tooltip" class="hidden pointer-events-none absolute z-20 bg-navy-900 text-white text-xs rounded-xl px-3 py-2 shadow-xl border border-gold-500/40 whitespace-nowrap">
+                    </div>
+                </div>
+
+                <!-- Ringkasan Analisis Otomatis Penguji -->
+                <div id="res-stability-insight" class="mt-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                </div>
+            </section>
+
+            <!-- Ringkasan Skor Per Kategori (Huruf, Angka, Simbol, Gambar, Campuran) -->
+            <section class="print-break-avoid">
+                <h2 class="text-base sm:text-lg font-extrabold text-navy-900 mb-3">
+                    Ringkasan Skor per Kategori (Maks 20,00 Poin / Kategori)
+                </h2>
+                <div id="category-summary-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+                    <!-- Kartu 5 Kategori dirender dinamis oleh JS -->
+                </div>
+            </section>
+
+            <!-- Tabel Rincian Lengkap Per Kolom (Kolom 1 - 10) -->
+            <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden print-shadow-none print-break-avoid">
+                <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base sm:text-lg font-extrabold text-navy-900">
+                            Rincian Evaluasi per Kolom (Kolom 1 – 10)
+                        </h2>
+                        <p class="text-xs text-slate-500">Maksimal 50 soal per kolom (Skor maksimal 10,00 per kolom)</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead>
+                            <tr class="bg-navy-900 text-white text-[11px] sm:text-xs uppercase tracking-wider">
+                                <th class="py-3 px-3 sm:px-4 font-bold">Kolom</th>
+                                <th class="py-3 px-3 sm:px-4 font-bold">Kategori</th>
+                                <th class="py-3 px-3 sm:px-4 font-bold text-center">Dijawab</th>
+                                <th class="py-3 px-3 sm:px-4 font-bold text-center">Benar</th>
+                                <th class="py-3 px-3 sm:px-4 font-bold text-center">Salah</th>
+                                <th class="py-3 px-3 sm:px-4 font-bold text-center">Kosong</th>
+                                <th class="py-3 px-3 sm:px-4 font-bold text-center">Akurasi</th>
+                                <th class="py-3 px-3 sm:px-4 font-bold text-right">Skor Kolom</th>
+                            </tr>
+                        </thead>
+                        <tbody id="column-breakdown-tbody" class="divide-y divide-slate-200 tabular-nums">
+                            <!-- 10 Baris Kolom dirender oleh JS -->
+                        </tbody>
+                        <tfoot id="column-breakdown-tfoot" class="bg-slate-100 font-extrabold text-navy-900 border-t-2 border-navy-900 tabular-nums">
+                            <!-- Baris Total dirender oleh JS -->
+                        </tfoot>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <footer class="py-4 text-center text-xs text-slate-500 border-t border-slate-200 bg-white">
+            Dicetak melalui Sistem Simulasi CBT Tes Kecermatan Polri / TNI • Rumus Skoring: Benar = 0,20 | Salah = 0
+        </footer>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- LOGIKA JAVASCRIPT APLIKASI CBT TES KECERMATAN                         -->
+    <!-- ===================================================================== -->
+    <script>
+        (function () {
+            'use strict';
+
+            /* =================================================================
+             * KONSTANTA & KONFIGURASI UTAMA TES KECERMATAN POLRI / TNI
+             * ================================================================= */
+            const TOTAL_COLUMNS = 10;
+            const QUESTIONS_PER_COLUMN = 50;
+            const TOTAL_QUESTIONS = TOTAL_COLUMNS * QUESTIONS_PER_COLUMN; // 500 soal
+            const COLUMN_DURATION_SEC = 90; // 1,5 menit = 90 detik
+            const BREAK_DURATION_SEC = 3;   // Jeda antar kolom 3 detik
+            const POINTS_PER_CORRECT = 0.20; // Benar = 0,20 | Salah = 0
+            const OPTION_LABELS = ['A', 'B', 'C', 'D', 'E'];
+
+            /* =================================================================
+             * PUSTAKA GAMBAR PSIKOTES INLINE SVG (TAJAM, KONTRAS TINGGI)
+             * ================================================================= */
+            const SVG_SHAPES = {
+                // --- KOLOM 7: Bentuk Geometris Psikotes ---
+                half_circle: `
+                    <svg viewBox="0 0 64 64" class="w-full h-full" aria-label="Lingkaran setengah arsir">
+                        <circle cx="32" cy="32" r="22" fill="#ffffff" stroke="#0f172a" stroke-width="4.2"/>
+                        <path d="M32 10 A22 22 0 0 0 32 54 Z" fill="#0f172a"/>
+                        <line x1="32" y1="10" x2="32" y2="54" stroke="#0f172a" stroke-width="3.5"/>
+                    </svg>
+                `,
+                dot_diamond: `
+                    <svg viewBox="0 0 64 64" class="w-full h-full" aria-label="Belah ketupat bertitik">
+                        <polygon points="32,8 56,32 32,56 8,32" fill="#ffffff" stroke="#0f172a" stroke-width="4.2" stroke-linejoin="round"/>
+                        <circle cx="32" cy="32" r="7.5" fill="#0f172a"/>
+                    </svg>
+                `,
+                split_triangle: `
+                    <svg viewBox="0 0 64 64" class="w-full h-full" aria-label="Segitiga terbelah">
+                        <polygon points="32,10 56,52 8,52" fill="#ffffff" stroke="#0f172a" stroke-width="4.2" stroke-linejoin="round"/>
+                        <polygon points="32,10 56,52 32,52" fill="#0f172a"/>
+                    </svg>
+                `,
+                cross_square: `
+                    <svg viewBox="0 0 64 64" class="w-full h-full" aria-label="Kotak silang">
+                        <rect x="12" y="12" width="40" height="40" rx="2" fill="#ffffff" stroke="#0f172a" stroke-width="4.2"/>
+                        <line x1="12" y1="12" x2="52" y2="52" stroke="#0f172a" stroke-width="3.8"/>
+                        <line x1="52" y1="12" x2="12" y2="52" stroke="#0f172a" stroke-width="3.8"/>
+                    </svg>
+                `,
+                double_ring: `
+                    <svg viewBox="0 0 64 64" class="w-full h-full" aria-label="Cincin ganda">
+                        <circle cx="32" cy="32" r="22" fill="#ffffff" stroke="#0f172a" stroke-width="4.2"/>
+                        <circle cx="32" cy="32" r="11" fill="#ffffff" stroke="#0f172a" stroke-width="4.2"/>
+                        <circle cx="32" cy="32" r="3.5" fill="#0f172a"/>
+                    </svg>
+                `,
+
+                // --- KOLOM 8: Ikon Psikotes & Simbol Taktis ---
+                shield: `
+                    <svg viewBox="0 0 64 64" class="w-full h-full" aria-label="Perisai">
+                        <path d="M32 8 L52 15 V31 C52 44 43 52 32 56 C21 52 12 44 12 31 V15 Z" fill="#ffffff" stroke="#0f172a" stroke-width="4.2" stroke-linejoin="round"/>
+                        <path d="M32 8 L52 15 V31 C52 44 43 52 32 56 Z" fill="#0f172a"/>
+                    </svg>
+                `,
+                compass_star: `
+                    <svg viewBox="0 0 64 64" class="w-full h-full" aria-label="Bintang kompas">
+                        <polygon points="32,6 39,25 58,32 39,39 32,58 25,39 6,32 25,25" fill="#0f172a" stroke="#0f172a" stroke-width="2.5" stroke-linejoin="round"/>
+                        <circle cx="32" cy="32" r="5.5" fill="#ffffff"/>
+                    </svg>
+                `,
+                hourglass: `
+                    <svg viewBox="0 0 64 64" class="w-full h-full" aria-label="Jam pasir">
+                        <line x1="14" y1="10" x2="50" y2="10" stroke="#0f172a" stroke-width="4.5" stroke-linecap="round"/>
+                        <line x1="14" y1="54" x2="50" y2="54" stroke="#0f172a" stroke-width="4.5" stroke-linecap="round"/>
+                        <polygon points="18,10 46,10 32,32" fill="#ffffff" stroke="#0f172a" stroke-width="3.6" stroke-linejoin="round"/>
+                        <polygon points="18,54 46,54 32,32" fill="#0f172a" stroke="#0f172a" stroke-width="3.6" stroke-linejoin="round"/>
+                    </svg>
+                `,
+                anchor: `
+                    <svg viewBox="0 0 64 64" class="w-full h-full" aria-label="Jangkar">
+                        <circle cx="32" cy="14" r="5.5" fill="none" stroke="#0f172a" stroke-width="4"/>
+                        <line x1="32" y1="19.5" x2="32" y2="54" stroke="#0f172a" stroke-width="4.2" stroke-linecap="round"/>
+                        <line x1="21" y1="27" x2="43" y2="27" stroke="#0f172a" stroke-width="4.2" stroke-linecap="round"/>
+                        <path d="M14 39 C14 50 22 54 32 54 C42 54 50 50 50 39" fill="none" stroke="#0f172a" stroke-width="4.2" stroke-linecap="round"/>
+                        <polyline points="10,42 14,37 19,42" fill="none" stroke="#0f172a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <polyline points="45,42 50,37 54,42" fill="none" stroke="#0f172a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                `,
+                cross_arrows: `
+                    <svg viewBox="0 0 64 64" class="w-full h-full" aria-label="Panah silang">
+                        <line x1="14" y1="50" x2="50" y2="14" stroke="#0f172a" stroke-width="4.2" stroke-linecap="round"/>
+                        <polyline points="37,14 50,14 50,27" fill="none" stroke="#0f172a" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="14" y1="14" x2="50" y2="50" stroke="#0f172a" stroke-width="4.2" stroke-linecap="round"/>
+                        <polyline points="37,50 50,50 50,37" fill="none" stroke="#0f172a" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                `,
+
+                // --- TAMBAHAN UNTUK KOLOM CAMPURAN (9 & 10) ---
+                hex_bar: `
+                    <svg viewBox="0 0 64 64" class="w-full h-full" aria-label="Heksagon bergaris">
+                        <polygon points="32,8 53,20 53,44 32,56 11,44 11,20" fill="#ffffff" stroke="#0f172a" stroke-width="4.2" stroke-linejoin="round"/>
+                        <line x1="11" y1="32" x2="53" y2="32" stroke="#0f172a" stroke-width="4.2"/>
+                        <circle cx="32" cy="21" r="4" fill="#0f172a"/>
+                    </svg>
+                `,
+                pie_quarter: `
+                    <svg viewBox="0 0 64 64" class="w-full h-full" aria-label="Lingkaran kuadran">
+                        <circle cx="32" cy="32" r="22" fill="#ffffff" stroke="#0f172a" stroke-width="4.2"/>
+                        <path d="M32 32 L32 10 A22 22 0 0 1 54 32 Z" fill="#0f172a"/>
+                        <path d="M32 32 L32 54 A22 22 0 0 1 10 32 Z" fill="#0f172a"/>
+                    </svg>
+                `
+            };
+
+            /* =================================================================
+             * STATE GLOBAL APLIKASI
+             * ================================================================= */
+            const state = {
+                phase: 'start', // 'start' | 'exam' | 'break' | 'results'
+                participant: {
+                    name: 'Peserta Simulasi',
+                    id: 'CASIS-001',
+                    completedAt: null
+                },
+                columns: [],          // Array 10 objek kolom (masing-masing 50 soal)
+                currentColIdx: 0,     // 0 .. 9
+                currentQIdx: 0,       // 0 .. 49
+                remainingMs: COLUMN_DURATION_SEC * 1000,
+                timerEndTime: null,
+                timerIntervalId: null,
+                isPaused: false,      // True saat modal konfirmasi terbuka
+                breakIntervalId: null,
+                breakRemainingSec: BREAK_DURATION_SEC,
+                pendingModalAction: null
+            };
+
+            /* =================================================================
+             * REFERENSI ELEMEN DOM
+             * ================================================================= */
+            const dom = {
+                // Screens
+                screenStart: document.getElementById('screen-start'),
+                screenExam: document.getElementById('screen-exam'),
+                screenResults: document.getElementById('screen-results'),
+                overlayBreak: document.getElementById('overlay-break'),
+                modalConfirm: document.getElementById('modal-confirm'),
+
+                // Start Inputs & Button
+                inputName: document.getElementById('input-name'),
+                inputId: document.getElementById('input-id'),
+                btnStartExam: document.getElementById('btn-start-exam'),
+
+                // Exam Header & Controls
+                examColNumShort: document.getElementById('exam-col-num-short'),
+                examColTitle: document.getElementById('exam-col-title'),
+                examColCategory: document.getElementById('exam-col-category'),
+                examParticipantLabel: document.getElementById('exam-participant-label'),
+                timerContainer: document.getElementById('timer-container'),
+                examTimer: document.getElementById('exam-timer'),
+                btnSkipColumn: document.getElementById('btn-skip-column'),
+                btnFinishEarly: document.getElementById('btn-finish-early'),
+                columnStepper: document.getElementById('column-stepper'),
+                examOverallProgress: document.getElementById('exam-overall-progress'),
+
+                // Exam Workspace
+                refTableSubtitle: document.getElementById('ref-table-subtitle'),
+                referenceGrid: document.getElementById('reference-grid'),
+                examQNum: document.getElementById('exam-q-num'),
+                examQPercent: document.getElementById('exam-q-percent'),
+                examQBar: document.getElementById('exam-q-bar'),
+                questionItemsGrid: document.getElementById('question-items-grid'),
+                answerButtons: Array.from(document.querySelectorAll('#answer-buttons-grid .answer-btn')),
+
+                // Break Overlay
+                breakReasonBadge: document.getElementById('break-reason-badge'),
+                breakHeading: document.getElementById('break-heading'),
+                breakNextInfo: document.getElementById('break-next-info'),
+                breakCountdown: document.getElementById('break-countdown'),
+                btnBreakContinue: document.getElementById('btn-break-continue'),
+
+                // Confirm Modal
+                modalTitle: document.getElementById('modal-title'),
+                modalMessage: document.getElementById('modal-message'),
+                modalBtnCancel: document.getElementById('modal-btn-cancel'),
+                modalBtnOk: document.getElementById('modal-btn-ok'),
+
+                // Results Screen
+                btnPrintReport: document.getElementById('btn-print-report'),
+                btnRestartExam: document.getElementById('btn-restart-exam'),
+                resName: document.getElementById('res-name'),
+                resId: document.getElementById('res-id'),
+                resDate: document.getElementById('res-date'),
+                resFinalScore: document.getElementById('res-final-score'),
+                resPredicateBadge: document.getElementById('res-predicate-badge'),
+                resTotalCorrect: document.getElementById('res-total-correct'),
+                resCorrectPoints: document.getElementById('res-correct-points'),
+                resTotalWrong: document.getElementById('res-total-wrong'),
+                resTotalUnanswered: document.getElementById('res-total-unanswered'),
+                resSpeedPct: document.getElementById('res-speed-pct'),
+                resSpeedDetail: document.getElementById('res-speed-detail'),
+                resAccuracyPct: document.getElementById('res-accuracy-pct'),
+                resAccuracyBar: document.getElementById('res-accuracy-bar'),
+                enduranceChartContainer: document.getElementById('endurance-chart-container'),
+                chartTooltip: document.getElementById('chart-tooltip'),
+                resStabilityInsight: document.getElementById('res-stability-insight'),
+                categorySummaryGrid: document.getElementById('category-summary-grid'),
+                columnBreakdownTbody: document.getElementById('column-breakdown-tbody'),
+                columnBreakdownTfoot: document.getElementById('column-breakdown-tfoot')
+            };
+
+            /* =================================================================
+             * FUNGSI UTILITAS (ACAK, FORMAT DESIMAL INDONESIA, RENDER ITEM)
+             * ================================================================= */
+
+            /**
+             * Fisher-Yates shuffle untuk mengacak array secara merata tanpa mutasi array asli.
+             */
+            function shuffleArray(arr) {
+                const copy = arr.slice();
+                for (let i = copy.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [copy[i], copy[j]] = [copy[j], copy[i]];
+                }
+                return copy;
+            }
+
+            /**
+             * Format angka desimal ke format Indonesia dengan koma (misal: 84,60).
+             */
+            function formatIndoDecimal(value, decimals = 2) {
+                const fixed = Number(value).toFixed(decimals);
+                return fixed.replace('.', ',');
+            }
+
+            /**
+             * Hitung skor secara akurat bebas floating-point error (Benar * 0,20).
+             */
+            function calculatePoints(correctCount) {
+                return (correctCount * 20) / 100;
+            }
+
+            /**
+             * Format milidetik ke string MM:SS (contoh: 01:30).
+             */
+            function formatTimeMMSS(ms) {
+                const totalSec = Math.max(0, Math.ceil(ms / 1000));
+                const mins = Math.floor(totalSec / 60);
+                const secs = totalSec % 60;
+                return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }
+
+            /**
+             * Menghasilkan HTML visual untuk satu item (Huruf / Angka / Simbol / Gambar SVG).
+             * @param {Object} item - { type: 'text'|'svg', value: string, id: string }
+             * @param {'ref'|'question'} context - Ukuran menyesuaikan tabel kunci atau area soal.
+             */
+            function renderItemMarkup(item, context) {
+                if (item.type === 'svg') {
+                    const sizeClass = context === 'ref'
+                        ? 'w-10 h-10 sm:w-14 sm:h-14'
+                        : 'w-11 h-11 sm:w-16 sm:h-16';
+                    return `<div class="${sizeClass} mx-auto flex items-center justify-center">${item.value}</div>`;
+                }
+
+                // Teks (Huruf, Angka, Simbol)
+                const textClass = context === 'ref'
+                    ? 'text-2xl sm:text-4xl font-black text-navy-900 leading-none select-none'
+                    : 'text-3xl sm:text-5xl font-black text-navy-900 leading-none select-none';
+                return `<span class="${textClass}">${item.value}</span>`;
+            }
+
+            /* =================================================================
+             * PEMBANGKIT PAKET 500 SOAL (10 KOLOM × 50 SOAL)
+             * ================================================================= */
+
+            /**
+             * Membuat konfigurasi 10 kolom sesuai aturan baku:
+             * Kolom 1-2: Huruf | Kolom 3-4: Angka | Kolom 5-6: Simbol |
+             * Kolom 7-8: Gambar (SVG) | Kolom 9-10: Campuran
+             */
+            function generateAllColumns() {
+                // Pilihan pasangan huruf kapital yang menantang secara visual (diacak tiap sesi)
+                const letterPairs = [
+                    [['B', 'D', 'P', 'Q', 'R'], ['M', 'N', 'W', 'V', 'H']],
+                    [['C', 'G', 'O', 'Q', 'D'], ['E', 'F', 'H', 'K', 'T']],
+                    [['B', 'R', 'P', 'D', 'O'], ['M', 'W', 'N', 'V', 'X']]
+                ];
+                const chosenLetterPair = letterPairs[Math.floor(Math.random() * letterPairs.length)];
+
+                // Pasangan angka berbeda (diacak urutan kolomnya tiap sesi)
+                const numberSets = shuffleArray([
+                    ['3', '5', '6', '8', '9'],
+                    ['0', '1', '2', '4', '7']
+                ]);
+
+                // Pasangan simbol tipografi & matematika tajam
+                const symbolSets = [
+                    ['@', '#', '$', '%', '&'],
+                    ['Ω', 'Σ', 'Δ', 'Ψ', 'Φ']
+                ];
+
+                // Pasangan 5 gambar inline SVG unik per kolom
+                const imageSetCol7 = [
+                    { id: 'img_half_circle', type: 'svg', value: SVG_SHAPES.half_circle },
+                    { id: 'img_dot_diamond', type: 'svg', value: SVG_SHAPES.dot_diamond },
+                    { id: 'img_split_triangle', type: 'svg', value: SVG_SHAPES.split_triangle },
+                    { id: 'img_cross_square', type: 'svg', value: SVG_SHAPES.cross_square },
+                    { id: 'img_double_ring', type: 'svg', value: SVG_SHAPES.double_ring }
+                ];
+                const imageSetCol8 = [
+                    { id: 'img_shield', type: 'svg', value: SVG_SHAPES.shield },
+                    { id: 'img_compass_star', type: 'svg', value: SVG_SHAPES.compass_star },
+                    { id: 'img_hourglass', type: 'svg', value: SVG_SHAPES.hourglass },
+                    { id: 'img_anchor', type: 'svg', value: SVG_SHAPES.anchor },
+                    { id: 'img_cross_arrows', type: 'svg', value: SVG_SHAPES.cross_arrows }
+                ];
+
+                // Pasangan kolom Campuran (masing-masing memadukan Huruf, Angka, Simbol, dan Gambar SVG)
+                const mixedSetCol9 = [
+                    { id: 'mix9_letter', type: 'text', value: 'R' },
+                    { id: 'mix9_num', type: 'text', value: '8' },
+                    { id: 'mix9_sym', type: 'text', value: 'Σ' },
+                    { id: 'mix9_svg1', type: 'svg', value: SVG_SHAPES.hex_bar },
+                    { id: 'mix9_svg2', type: 'svg', value: SVG_SHAPES.half_circle }
+                ];
+                const mixedSetCol10 = [
+                    { id: 'mix10_letter', type: 'text', value: 'W' },
+                    { id: 'mix10_num', type: 'text', value: '6' },
+                    { id: 'mix10_sym', type: 'text', value: '&' },
+                    { id: 'mix10_svg1', type: 'svg', value: SVG_SHAPES.pie_quarter },
+                    { id: 'mix10_svg2', type: 'svg', value: SVG_SHAPES.compass_star }
+                ];
+
+                // Helper konversi array teks ke format objek item standar
+                const toTextItems = (arr, prefix) => arr.map((val, idx) => ({
+                    id: `${prefix}_${idx}_${val}`,
+                    type: 'text',
+                    value: val
+                }));
+
+                const columnSpecs = [
+                    { category: 'Huruf', shortCode: 'H1', items: toTextItems(chosenLetterPair[0], 'c1') },
+                    { category: 'Huruf', shortCode: 'H2', items: toTextItems(chosenLetterPair[1], 'c2') },
+                    { category: 'Angka', shortCode: 'A1', items: toTextItems(numberSets[0], 'c3') },
+                    { category: 'Angka', shortCode: 'A2', items: toTextItems(numberSets[1], 'c4') },
+                    { category: 'Simbol', shortCode: 'S1', items: toTextItems(symbolSets[0], 'c5') },
+                    { category: 'Simbol', shortCode: 'S2', items: toTextItems(symbolSets[1], 'c6') },
+                    { category: 'Gambar', shortCode: 'G1', items: imageSetCol7 },
+                    { category: 'Gambar', shortCode: 'G2', items: imageSetCol8 },
+                    { category: 'Campuran', shortCode: 'C1', items: mixedSetCol9 },
+                    { category: 'Campuran', shortCode: 'C2', items: mixedSetCol10 }
+                ];
+
+                // Bangun 10 kolom lengkap dengan 50 soal teracak masing-masing
+                return columnSpecs.map((spec, colIndex) => {
+                    const shuffledKeyItems = shuffleArray(spec.items);
+                    const questions = generateQuestionsForColumn(shuffledKeyItems, QUESTIONS_PER_COLUMN);
+
+                    return {
+                        colNumber: colIndex + 1,
+                        category: spec.category,
+                        shortCode: spec.shortCode,
+                        keyItems: shuffledKeyItems, // indeks 0..4 berpasangan dengan A..E
+                        questions: questions
+                    };
+                });
+            }
+
+            /**
+             * Menghasilkan 50 soal seimbang untuk satu kolom (masing-masing opsi A-E hilang 10 kali).
+             * Menjaga urutan 4 item soal selalu acak dan tidak identik berturut-turut.
+             */
+            function generateQuestionsForColumn(keyItems, count) {
+                // Buat distribusi kunci jawaban yang merata (10 A, 10 B, 10 C, 10 D, 10 E)
+                let missingIndices = [];
+                for (let i = 0; i < count; i++) {
+                    missingIndices.push(i % 5);
+                }
+                missingIndices = shuffleArray(missingIndices);
+
+                // Hindari lebih dari 2 jawaban identik berurutan agar pola soal terasa natural
+                for (let i = 2; i < missingIndices.length; i++) {
+                    if (missingIndices[i] === missingIndices[i - 1] && missingIndices[i] === missingIndices[i - 2]) {
+                        const swapIdx = (i + 3) % missingIndices.length;
+                        [missingIndices[i], missingIndices[swapIdx]] = [missingIndices[swapIdx], missingIndices[i]];
+                    }
+                }
+
+                const questions = [];
+                let prevSignature = '';
+
+                for (let q = 0; q < count; q++) {
+                    const missingIdx = missingIndices[q];
+                    const remainingFour = keyItems.filter((_, idx) => idx !== missingIdx);
+
+                    // Acak urutan 4 item yang ditampilkan dan pastikan berbeda dengan soal sebelumnya
+                    let displayed = shuffleArray(remainingFour);
+                    let signature = displayed.map(it => it.id).join('|');
+                    let guard = 0;
+                    while (signature === prevSignature && guard < 8) {
+                        displayed = shuffleArray(remainingFour);
+                        signature = displayed.map(it => it.id).join('|');
+                        guard++;
+                    }
+                    prevSignature = signature;
+
+                    questions.push({
+                        qNumber: q + 1,
+                        displayedItems: displayed,
+                        correctAnswer: OPTION_LABELS[missingIdx],
+                        userAnswer: null,
+                        isCorrect: false
+                    });
+                }
+
+                return questions;
+            }
+
+            /* =================================================================
+             * NAVIGASI ANTAR LAYAR
+             * ================================================================= */
+            function showScreen(screenName) {
+                state.phase = screenName;
+                dom.screenStart.classList.toggle('hidden', screenName !== 'start');
+                dom.screenExam.classList.toggle('hidden', screenName !== 'exam' && screenName !== 'break');
+                dom.overlayBreak.classList.toggle('hidden', screenName !== 'break');
+                dom.screenResults.classList.toggle('hidden', screenName !== 'results');
+            }
+
+            /* =================================================================
+             * MANAJEMEN TIMER KOLOM (AKURAT BERBASIS TIMESTAMP)
+             * ================================================================= */
+            function stopColumnTimer() {
+                if (state.timerIntervalId !== null) {
+                    clearInterval(state.timerIntervalId);
+                    state.timerIntervalId = null;
+                }
+            }
+
+            function startColumnTimer(durationMs) {
+                stopColumnTimer();
+                state.remainingMs = durationMs;
+                state.timerEndTime = Date.now() + durationMs;
+                state.isPaused = false;
+                updateTimerUI(state.remainingMs);
+
+                state.timerIntervalId = setInterval(() => {
+                    if (state.isPaused) return;
+
+                    const left = state.timerEndTime - Date.now();
+                    state.remainingMs = Math.max(0, left);
+                    updateTimerUI(state.remainingMs);
+
+                    if (state.remainingMs <= 0) {
+                        stopColumnTimer();
+                        handleColumnFinished('Waktu Kolom Habis');
+                    }
+                }, 100);
+            }
+
+            function pauseColumnTimer() {
+                if (state.phase !== 'exam' || state.isPaused) return;
+                state.isPaused = true;
+                state.remainingMs = Math.max(0, state.timerEndTime - Date.now());
+            }
+
+            function resumeColumnTimer() {
+                if (state.phase !== 'exam' || !state.isPaused) return;
+                state.isPaused = false;
+                state.timerEndTime = Date.now() + state.remainingMs;
+            }
+
+            /**
+             * Memperbarui tampilan timer hitung mundur:
+             * - Normal (> 20 dtk): Putih/Navy
+             * - Peringatan (< 20 dtk): Kuning/Amber
+             * - Kritis (< 10 dtk): Merah berdenyut
+             */
+            function updateTimerUI(ms) {
+                dom.examTimer.textContent = formatTimeMMSS(ms);
+                const secLeft = Math.ceil(ms / 1000);
+
+                // Reset kelas warna
+                dom.timerContainer.classList.remove(
+                    'bg-navy-800', 'border-slate-600',
+                    'bg-amber-500/20', 'border-amber-400',
+                    'bg-red-600/25', 'border-red-500', 'timer-critical'
+                );
+                dom.examTimer.classList.remove('text-white', 'text-amber-300', 'text-red-400');
+
+                if (secLeft < 10) {
+                    dom.timerContainer.classList.add('bg-red-600/25', 'border-red-500', 'timer-critical');
+                    dom.examTimer.classList.add('text-red-400');
+                } else if (secLeft < 20) {
+                    dom.timerContainer.classList.add('bg-amber-500/20', 'border-amber-400');
+                    dom.examTimer.classList.add('text-amber-300');
+                } else {
+                    dom.timerContainer.classList.add('bg-navy-800', 'border-slate-600');
+                    dom.examTimer.classList.add('text-white');
+                }
+            }
+
+            /* =================================================================
+             * RENDER UI UJIAN (TABEL KUNCI, SOAL AKTIF, STEPPER KOLOM)
+             * ================================================================= */
+            function renderColumnStepper() {
+                const html = state.columns.map((col, idx) => {
+                    let pillClass = 'bg-slate-800 text-slate-500 border-slate-700';
+                    if (idx < state.currentColIdx) {
+                        pillClass = 'bg-emerald-600/80 text-white border-emerald-500';
+                    } else if (idx === state.currentColIdx) {
+                        pillClass = 'bg-gold-500 text-navy-950 font-black border-gold-400 shadow';
+                    }
+                    return `
+                        <div class="text-center py-0.5 rounded border text-[10px] font-bold tracking-tight ${pillClass}" title="Kolom ${col.colNumber}: ${col.category}">
+                            ${col.shortCode}
+                        </div>
+                    `;
+                }).join('');
+                dom.columnStepper.innerHTML = html;
+            }
+
+            function updateOverallAnsweredCounter() {
+                let totalAnswered = 0;
+                for (let c = 0; c < state.columns.length; c++) {
+                    const qs = state.columns[c].questions;
+                    for (let q = 0; q < qs.length; q++) {
+                        if (qs[q].userAnswer !== null) totalAnswered++;
+                    }
+                }
+                dom.examOverallProgress.textContent = `Total Dijawab: ${totalAnswered} / ${TOTAL_QUESTIONS}`;
+            }
+
+            function renderCurrentColumnHeaderAndKey() {
+                const col = state.columns[state.currentColIdx];
+
+                dom.examColNumShort.textContent = `K${col.colNumber}`;
+                dom.examColTitle.textContent = `Kolom ${col.colNumber} / ${TOTAL_COLUMNS}`;
+                dom.examColCategory.textContent = col.category;
+                dom.refTableSubtitle.textContent = `Kolom ${col.colNumber} — Kategori ${col.category}`;
+                dom.examParticipantLabel.textContent = `${state.participant.name} (${state.participant.id})`;
+
+                // Render 5 sel Tabel Kunci Referensi (Item di atas, label A-E di bawah)
+                const refHtml = col.keyItems.map((item, idx) => `
+                    <div class="flex flex-col items-center justify-between">
+                        <div class="w-full py-3.5 sm:py-5 px-1 flex items-center justify-center bg-white min-h-[72px] sm:min-h-[96px]">
+                            ${renderItemMarkup(item, 'ref')}
+                        </div>
+                        <div class="w-full py-1.5 sm:py-2 bg-slate-100 border-t border-slate-200 text-center">
+                            <span class="inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-md bg-navy-900 text-gold-400 font-extrabold text-xs sm:text-sm">
+                                ${OPTION_LABELS[idx]}
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+
+                dom.referenceGrid.innerHTML = refHtml;
+                renderColumnStepper();
+            }
+
+            function renderCurrentQuestion() {
+                const col = state.columns[state.currentColIdx];
+                const question = col.questions[state.currentQIdx];
+
+                dom.examQNum.textContent = question.qNumber;
+                const pct = Math.round(((question.qNumber - 1) / QUESTIONS_PER_COLUMN) * 100);
+                dom.examQPercent.textContent = `${pct}%`;
+                dom.examQBar.style.width = `${Math.max(2, (question.qNumber / QUESTIONS_PER_COLUMN) * 100)}%`;
+
+                // Render 4 item soal dengan transisi cepat
+                const qHtml = question.displayedItems.map(item => `
+                    <div class="bg-white rounded-xl border-2 border-slate-200 shadow-xs py-4 sm:py-6 px-2 flex items-center justify-center min-h-[78px] sm:min-h-[108px]">
+                        ${renderItemMarkup(item, 'question')}
+                    </div>
+                `).join('');
+
+                dom.questionItemsGrid.classList.remove('animate-question-pop');
+                // Paksa reflow singkat agar animasi selalu terpicu saat berpindah soal
+                void dom.questionItemsGrid.offsetWidth;
+                dom.questionItemsGrid.innerHTML = qHtml;
+                dom.questionItemsGrid.classList.add('animate-question-pop');
+
+                updateOverallAnsweredCounter();
+            }
+
+            /* =================================================================
+             * ALUR PENGERJAAN SOAL, JEDA 3 DETIK, DAN SELESAI UJIAN
+             * ================================================================= */
+            function startExamSession() {
+                try {
+                    // Ambil identitas peserta opsional
+                    const rawName = dom.inputName.value.trim();
+                    const rawId = dom.inputId.value.trim();
+                    const randomCode = String(Math.floor(100 + Math.random() * 900));
+
+                    state.participant.name = rawName || 'Peserta Simulasi';
+                    state.participant.id = rawId || `CASIS-${new Date().getFullYear()}-${randomCode}`;
+                    state.participant.completedAt = null;
+
+                    // Bangkitkan 500 soal baru teracak
+                    state.columns = generateAllColumns();
+                    state.currentColIdx = 0;
+                    state.currentQIdx = 0;
+
+                    showScreen('exam');
+                    beginColumn(0);
+                } catch (err) {
+                    console.error('Gagal memulai sesi ujian:', err);
+                }
+            }
+
+            function beginColumn(colIdx) {
+                state.currentColIdx = colIdx;
+                state.currentQIdx = 0;
+                showScreen('exam');
+                renderCurrentColumnHeaderAndKey();
+                renderCurrentQuestion();
+                startColumnTimer(COLUMN_DURATION_SEC * 1000);
+            }
+
+            /**
+             * Memproses jawaban peserta (A, B, C, D, atau E) dan langsung lanjut ke soal berikutnya.
+             */
+            function submitAnswer(optionLetter) {
+                if (state.phase !== 'exam' || state.isPaused) return;
+                if (!OPTION_LABELS.includes(optionLetter)) return;
+
+                const col = state.columns[state.currentColIdx];
+                const question = col.questions[state.currentQIdx];
+
+                // Catat jawaban tanpa menampilkan kunci jawaban
+                question.userAnswer = optionLetter;
+                question.isCorrect = (optionLetter === question.correctAnswer);
+
+                // Cek apakah masih ada soal tersisa di kolom ini
+                if (state.currentQIdx < QUESTIONS_PER_COLUMN - 1) {
+                    state.currentQIdx += 1;
+                    renderCurrentQuestion();
+                } else {
+                    // Semua 50 soal dalam kolom selesai sebelum waktu habis
+                    stopColumnTimer();
+                    handleColumnFinished('50 Soal Selesai');
+                }
+            }
+
+            /**
+             * Menangani akhir suatu kolom (baik karena waktu habis, 50 soal selesai, atau dilewati penguji).
+             */
+            function handleColumnFinished(reasonText) {
+                stopColumnTimer();
+                closeConfirmModal(false);
+
+                // Jika ini kolom terakhir (Kolom 10), langsung akhiri ujian & hitung skor
+                if (state.currentColIdx >= TOTAL_COLUMNS - 1) {
+                    finishExamAndShowResults();
+                    return;
+                }
+
+                // Tampilkan layar jeda 3 detik sebelum kolom berikutnya
+                startIntermissionBreak(reasonText);
+            }
+
+            function stopBreakTimer() {
+                if (state.breakIntervalId !== null) {
+                    clearInterval(state.breakIntervalId);
+                    state.breakIntervalId = null;
+                }
+            }
+
+            function startIntermissionBreak(reasonText) {
+                stopBreakTimer();
+                const finishedCol = state.columns[state.currentColIdx];
+                const nextCol = state.columns[state.currentColIdx + 1];
+
+                dom.breakReasonBadge.textContent = reasonText;
+                dom.breakHeading.textContent = `Kolom ${finishedCol.colNumber} Selesai — Persiapan Kolom Berikutnya`;
+                dom.breakNextInfo.textContent = `Kolom ${nextCol.colNumber} — Kategori ${nextCol.category} (50 Soal • 01:30)`;
+
+                state.breakRemainingSec = BREAK_DURATION_SEC;
+                dom.breakCountdown.textContent = state.breakRemainingSec;
+
+                showScreen('break');
+
+                state.breakIntervalId = setInterval(() => {
+                    state.breakRemainingSec -= 1;
+                    if (state.breakRemainingSec <= 0) {
+                        proceedToNextColumn();
+                    } else {
+                        dom.breakCountdown.textContent = state.breakRemainingSec;
+                    }
+                }, 1000);
+            }
+
+            function proceedToNextColumn() {
+                if (state.phase !== 'break') return;
+                stopBreakTimer();
+                beginColumn(state.currentColIdx + 1);
+            }
+
+            function finishExamAndShowResults() {
+                stopColumnTimer();
+                stopBreakTimer();
+                closeConfirmModal(false);
+
+                state.participant.completedAt = new Date();
+                renderResultsDashboard();
+                showScreen('results');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            /* =================================================================
+             * MODAL KONFIRMASI KUSTOM (KONTROL PENGUJI)
+             * ================================================================= */
+            function openConfirmModal(title, message, okLabel, onConfirm) {
+                pauseColumnTimer();
+                dom.modalTitle.textContent = title;
+                dom.modalMessage.textContent = message;
+                dom.modalBtnOk.textContent = okLabel;
+                state.pendingModalAction = onConfirm;
+                dom.modalConfirm.classList.remove('hidden');
+            }
+
+            function closeConfirmModal(shouldResumeTimer = true) {
+                dom.modalConfirm.classList.add('hidden');
+                state.pendingModalAction = null;
+                if (shouldResumeTimer && state.phase === 'exam') {
+                    resumeColumnTimer();
+                }
+            }
+
+            /* =================================================================
+             * PERHITUNGAN SKORING & RENDER LAPORAN EVALUASI AKHIR
+             * ================================================================= */
+            function evaluatePredicate(score) {
+                if (score >= 85) {
+                    return {
+                        label: 'Sangat Baik (MS Tinggi)',
+                        cls: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/50'
+                    };
+                }
+                if (score >= 70) {
+                    return {
+                        label: 'Baik (Memenuhi Syarat)',
+                        cls: 'bg-sky-500/20 text-sky-300 border-sky-400/50'
+                    };
+                }
+                if (score >= 60) {
+                    return {
+                        label: 'Cukup (Batas Minimal)',
+                        cls: 'bg-amber-500/20 text-amber-300 border-amber-400/50'
+                    };
+                }
+                return {
+                    label: 'Kurang (Perlu Latihan)',
+                    cls: 'bg-red-500/20 text-red-300 border-red-400/50'
+                };
+            }
+
+            function computeAllStatistics() {
+                let totalAnswered = 0;
+                let totalCorrect = 0;
+                let totalWrong = 0;
+                let totalUnanswered = 0;
+
+                const colStats = state.columns.map(col => {
+                    let answered = 0;
+                    let correct = 0;
+                    let wrong = 0;
+                    let unanswered = 0;
+
+                    for (let i = 0; i < col.questions.length; i++) {
+                        const q = col.questions[i];
+                        if (q.userAnswer === null) {
+                            unanswered++;
+                        } else {
+                            answered++;
+                            if (q.isCorrect) correct++;
+                            else wrong++;
+                        }
+                    }
+
+                    totalAnswered += answered;
+                    totalCorrect += correct;
+                    totalWrong += wrong;
+                    totalUnanswered += unanswered;
+
+                    const accuracy = answered > 0 ? (correct / answered) * 100 : 0;
+                    const score = calculatePoints(correct);
+
+                    return {
+                        colNumber: col.colNumber,
+                        category: col.category,
+                        shortCode: col.shortCode,
+                        answered,
+                        correct,
+                        wrong,
+                        unanswered,
+                        accuracy,
+                        score
+                    };
+                });
+
+                // Agregasi per 5 kategori
+                const categoryOrder = ['Huruf', 'Angka', 'Simbol', 'Gambar', 'Campuran'];
+                const categoryStats = categoryOrder.map(cat => {
+                    const matched = colStats.filter(c => c.category === cat);
+                    const answered = matched.reduce((s, c) => s + c.answered, 0);
+                    const correct = matched.reduce((s, c) => s + c.correct, 0);
+                    const wrong = matched.reduce((s, c) => s + c.wrong, 0);
+                    const unanswered = matched.reduce((s, c) => s + c.unanswered, 0);
+                    const accuracy = answered > 0 ? (correct / answered) * 100 : 0;
+                    const score = calculatePoints(correct); // Maks 20,00 per kategori (100 soal × 0,20)
+                    const colRange = matched.map(c => c.colNumber).join(' & ');
+
+                    return {
+                        category: cat,
+                        colRange,
+                        answered,
+                        correct,
+                        wrong,
+                        unanswered,
+                        accuracy,
+                        score
+                    };
+                });
+
+                const finalScore = calculatePoints(totalCorrect); // Maks 100,00
+                const speedPct = (totalAnswered / TOTAL_QUESTIONS) * 100;
+                const accuracyPct = totalAnswered > 0 ? (totalCorrect / totalAnswered) * 100 : 0;
+
+                return {
+                    totalAnswered,
+                    totalCorrect,
+                    totalWrong,
+                    totalUnanswered,
+                    finalScore,
+                    speedPct,
+                    accuracyPct,
+                    colStats,
+                    categoryStats
+                };
+            }
+
+            function renderResultsDashboard() {
+                const stats = computeAllStatistics();
+
+                // 1. Metadata Peserta
+                dom.resName.textContent = state.participant.name;
+                dom.resId.textContent = state.participant.id;
+                dom.resDate.textContent = state.participant.completedAt.toLocaleString('id-ID', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) + ' WIB';
+
+                // 2. Kartu Ringkasan Utama
+                dom.resFinalScore.textContent = formatIndoDecimal(stats.finalScore, 2);
+                const pred = evaluatePredicate(stats.finalScore);
+                dom.resPredicateBadge.textContent = pred.label;
+                dom.resPredicateBadge.className = `px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide border ${pred.cls}`;
+
+                dom.resTotalCorrect.textContent = stats.totalCorrect;
+                dom.resCorrectPoints.textContent = `+${formatIndoDecimal(stats.finalScore, 2)} poin`;
+                dom.resTotalWrong.textContent = stats.totalWrong;
+                dom.resTotalUnanswered.textContent = stats.totalUnanswered;
+
+                dom.resSpeedPct.textContent = `${formatIndoDecimal(stats.speedPct, 1)}%`;
+                dom.resSpeedDetail.textContent = `${stats.totalAnswered} / ${TOTAL_QUESTIONS} terjawab`;
+
+                dom.resAccuracyPct.textContent = `${formatIndoDecimal(stats.accuracyPct, 1)}%`;
+                dom.resAccuracyBar.style.width = `${Math.min(100, Math.max(0, stats.accuracyPct))}%`;
+
+                // 3. Grafik Performa Ketahanan (Inline SVG Responsif)
+                renderEnduranceChart(stats.colStats);
+                renderStabilityInsight(stats);
+
+                // 4. Ringkasan Per Kategori
+                renderCategoryCards(stats.categoryStats);
+
+                // 5. Tabel Rincian Per Kolom
+                renderColumnBreakdownTable(stats);
+            }
+
+            /**
+             * Menggambar Grafik Garis Performa Ketahanan (Jumlah Dijawab vs Jumlah Benar)
+             * menggunakan Inline SVG responsif agar tajam di semua layar dan sempurna saat cetak PDF.
+             */
+            function renderEnduranceChart(colStats) {
+                const width = 820;
+                const height = 290;
+                const pad = { top: 24, right: 28, bottom: 52, left: 46 };
+                const plotW = width - pad.left - pad.right;
+                const plotH = height - pad.top - pad.bottom;
+
+                const getX = (idx) => pad.left + (idx / (colStats.length - 1)) * plotW;
+                const getY = (val) => pad.top + plotH - (val / QUESTIONS_PER_COLUMN) * plotH;
+
+                // Grid garis horizontal (0, 10, 20, 30, 40, 50)
+                const yTicks = [0, 10, 20, 30, 40, 50];
+                const gridLines = yTicks.map(tick => {
+                    const y = getY(tick);
+                    return `
+                        <line x1="${pad.left}" y1="${y}" x2="${width - pad.right}" y2="${y}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="${tick === 0 ? '' : '4 4'}"/>
+                        <text x="${pad.left - 10}" y="${y + 4}" text-anchor="end" fill="#64748b" font-size="11" font-weight="600">${tick}</text>
+                    `;
+                }).join('');
+
+                // Label sumbu X (Kolom 1..10 + kode kategori)
+                const xLabels = colStats.map((c, idx) => {
+                    const x = getX(idx);
+                    return `
+                        <text x="${x}" y="${height - 26}" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="700">K${c.colNumber}</text>
+                        <text x="${x}" y="${height - 10}" text-anchor="middle" fill="#64748b" font-size="10" font-weight="500">${c.category}</text>
+                    `;
+                }).join('');
+
+                // Koordinat kurva Dijawab & Benar
+                const answeredPts = colStats.map((c, i) => `${getX(i)},${getY(c.answered)}`).join(' ');
+                const correctPts = colStats.map((c, i) => `${getX(i)},${getY(c.correct)}`).join(' ');
+
+                // Area arsir lembut di bawah kurva Benar
+                const areaPath = `M ${getX(0)},${getY(0)} ` +
+                    colStats.map((c, i) => `L ${getX(i)},${getY(c.correct)}`).join(' ') +
+                    ` L ${getX(colStats.length - 1)},${getY(0)} Z`;
+
+                // Titik data interaktif
+                const pointsMarkup = colStats.map((c, i) => {
+                    const x = getX(i);
+                    const yAns = getY(c.answered);
+                    const yCor = getY(c.correct);
+                    return `
+                        <g class="chart-point-group cursor-pointer" data-col-idx="${i}">
+                            <line x1="${x}" y1="${pad.top}" x2="${x}" y2="${pad.top + plotH}" stroke="transparent" stroke-width="28"/>
+                            <circle cx="${x}" cy="${yAns}" r="5" fill="#ffffff" stroke="#d97706" stroke-width="3"/>
+                            <circle cx="${x}" cy="${yCor}" r="5.5" fill="#0f172a" stroke="#ffffff" stroke-width="2"/>
+                            <text x="${x}" y="${yAns - 10}" text-anchor="middle" fill="#b45309" font-size="10" font-weight="700">${c.answered}</text>
+                            ${Math.abs(yAns - yCor) > 15 ? `<text x="${x}" y="${yCor + 16}" text-anchor="middle" fill="#0f172a" font-size="10" font-weight="800">${c.correct}</text>` : ''}
+                        </g>
+                    `;
+                }).join('');
+
+                dom.enduranceChartContainer.innerHTML = `
+                    <svg viewBox="0 0 ${width} ${height}" class="w-full min-w-[560px] h-auto select-none" role="img" aria-label="Grafik Performa Ketahanan Kolom 1 hingga 10">
+                        <defs>
+                            <linearGradient id="correctAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#0f172a" stop-opacity="0.18"/>
+                                <stop offset="100%" stop-color="#0f172a" stop-opacity="0.01"/>
+                            </linearGradient>
+                        </defs>
+                        ${gridLines}
+                        ${xLabels}
+                        <path d="${areaPath}" fill="url(#correctAreaGrad)"/>
+                        <polyline points="${answeredPts}" fill="none" stroke="#d97706" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 4"/>
+                        <polyline points="${correctPts}" fill="none" stroke="#0f172a" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        ${pointsMarkup}
+                    </svg>
+                `;
+
+                // Tambahkan tooltip interaktif saat kursor diarahkan ke titik kolom
+                const pointGroups = dom.enduranceChartContainer.querySelectorAll('.chart-point-group');
+                pointGroups.forEach(group => {
+                    group.addEventListener('mouseenter', (e) => {
+                        const idx = Number(group.getAttribute('data-col-idx'));
+                        const c = colStats[idx];
+                        dom.chartTooltip.innerHTML = `
+                            <div class="font-bold text-gold-400">Kolom ${c.colNumber} (${c.category})</div>
+                            <div class="mt-1 space-y-0.5 text-[11px]">
+                                <div>Dijawab: <strong>${c.answered}</strong> / 50</div>
+                                <div>Benar: <strong class="text-emerald-400">${c.correct}</strong> • Salah: <strong class="text-red-400">${c.wrong}</strong></div>
+                                <div>Akurasi: <strong>${formatIndoDecimal(c.accuracy, 1)}%</strong> • Skor: <strong class="text-gold-300">${formatIndoDecimal(c.score, 2)}</strong></div>
+                            </div>
+                        `;
+                        dom.chartTooltip.classList.remove('hidden');
+                        positionTooltip(e);
+                    });
+                    group.addEventListener('mousemove', positionTooltip);
+                    group.addEventListener('mouseleave', () => {
+                        dom.chartTooltip.classList.add('hidden');
+                    });
+                });
+            }
+
+            function positionTooltip(e) {
+                const parentRect = dom.enduranceChartContainer.parentElement.getBoundingClientRect();
+                const relX = e.clientX - parentRect.left;
+                const relY = e.clientY - parentRect.top;
+                const tipW = dom.chartTooltip.offsetWidth || 160;
+                const left = Math.min(Math.max(8, relX - tipW / 2), parentRect.width - tipW - 8);
+                const top = Math.max(4, relY - 90);
+                dom.chartTooltip.style.left = `${left}px`;
+                dom.chartTooltip.style.top = `${top}px`;
+            }
+
+            /**
+             * Analisis teks singkat otomatis untuk membantu penguji membaca ketahanan & kelelahan peserta.
+             */
+            function renderStabilityInsight(stats) {
+                const cols = stats.colStats;
+                const avgEarly = (cols[0].correct + cols[1].correct + cols[2].correct) / 3;
+                const avgLate = (cols[7].correct + cols[8].correct + cols[9].correct) / 3;
+                const diff = avgLate - avgEarly;
+
+                let trendText = 'stabil dari awal hingga akhir sesi';
+                if (stats.totalAnswered === 0) {
+                    trendText = 'belum dapat dianalisis karena belum ada soal yang dijawab';
+                } else if (diff >= 3) {
+                    trendText = 'menunjukkan tren meningkat (adaptasi sangat baik pada kolom akhir)';
+                } else if (diff <= -3) {
+                    trendText = 'menunjukkan penurunan ketahanan pada kolom-kolom akhir (indikasi kelelahan konsentrasi)';
+                }
+
+                // Cari kategori terbaik dan terendah
+                const sortedCats = stats.categoryStats.slice().sort((a, b) => b.score - a.score);
+                const bestCat = sortedCats[0];
+                const weakestCat = sortedCats[sortedCats.length - 1];
+
+                dom.resStabilityInsight.innerHTML = `
+                    <strong class="text-navy-900">Catatan Evaluasi Penguji:</strong>
+                    Rata-rata jawaban benar pada 3 kolom awal adalah <strong>${formatIndoDecimal(avgEarly, 1)} soal/kolom</strong>,
+                    sedangkan pada 3 kolom akhir adalah <strong>${formatIndoDecimal(avgLate, 1)} soal/kolom</strong> — performa peserta
+                    <strong class="text-navy-900">${trendText}</strong>.
+                    Kategori terkuat berada pada <strong>${bestCat.category}</strong> (skor ${formatIndoDecimal(bestCat.score, 2)}/20,00)
+                    dan area yang paling perlu ditingkatkan adalah <strong>${weakestCat.category}</strong> (skor ${formatIndoDecimal(weakestCat.score, 2)}/20,00).
+                `;
+            }
+
+            function renderCategoryCards(categoryStats) {
+                const html = categoryStats.map(cat => {
+                    const pctScore = (cat.score / 20) * 100;
+                    return `
+                        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm print-shadow-none flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-sm font-extrabold text-navy-900">${cat.category}</span>
+                                    <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+                                        Kolom ${cat.colRange}
+                                    </span>
+                                </div>
+                                <div class="mt-2.5 flex items-baseline justify-between">
+                                    <span class="text-2xl font-black text-navy-900 tabular-nums">${formatIndoDecimal(cat.score, 2)}</span>
+                                    <span class="text-xs font-semibold text-slate-400">/ 20,00</span>
+                                </div>
+                                <div class="mt-2 w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gold-600 rounded-full" style="width: ${Math.min(100, pctScore)}%;"></div>
+                                </div>
+                            </div>
+                            <div class="mt-3 pt-2.5 border-t border-slate-100 grid grid-cols-3 text-center text-[11px] tabular-nums">
+                                <div>
+                                    <span class="block text-slate-400">Benar</span>
+                                    <strong class="text-emerald-600">${cat.correct}</strong>
+                                </div>
+                                <div>
+                                    <span class="block text-slate-400">Salah</span>
+                                    <strong class="text-red-600">${cat.wrong}</strong>
+                                </div>
+                                <div>
+                                    <span class="block text-slate-400">Akurasi</span>
+                                    <strong class="text-navy-900">${formatIndoDecimal(cat.accuracy, 0)}%</strong>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                dom.categorySummaryGrid.innerHTML = html;
+            }
+
+            function renderColumnBreakdownTable(stats) {
+                const rowsHtml = stats.colStats.map(c => `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="py-2.5 px-3 sm:px-4 font-bold text-navy-900">Kolom ${c.colNumber}</td>
+                        <td class="py-2.5 px-3 sm:px-4">
+                            <span class="inline-block px-2 py-0.5 rounded-md text-[11px] font-bold bg-slate-100 text-navy-800 border border-slate-200">
+                                ${c.category}
+                            </span>
+                        </td>
+                        <td class="py-2.5 px-3 sm:px-4 text-center font-semibold text-slate-700">${c.answered} / 50</td>
+                        <td class="py-2.5 px-3 sm:px-4 text-center font-bold text-emerald-600">${c.correct}</td>
+                        <td class="py-2.5 px-3 sm:px-4 text-center font-bold text-red-600">${c.wrong}</td>
+                        <td class="py-2.5 px-3 sm:px-4 text-center text-slate-500">${c.unanswered}</td>
+                        <td class="py-2.5 px-3 sm:px-4 text-center font-semibold text-navy-900">${formatIndoDecimal(c.accuracy, 1)}%</td>
+                        <td class="py-2.5 px-3 sm:px-4 text-right font-extrabold text-navy-900">${formatIndoDecimal(c.score, 2)}</td>
+                    </tr>
+                `).join('');
+
+                dom.columnBreakdownTbody.innerHTML = rowsHtml;
+
+                dom.columnBreakdownTfoot.innerHTML = `
+                    <tr>
+                        <td class="py-3 px-3 sm:px-4" colspan="2">TOTAL KESELURUHAN (500 SOAL)</td>
+                        <td class="py-3 px-3 sm:px-4 text-center">${stats.totalAnswered} / 500</td>
+                        <td class="py-3 px-3 sm:px-4 text-center text-emerald-700">${stats.totalCorrect}</td>
+                        <td class="py-3 px-3 sm:px-4 text-center text-red-700">${stats.totalWrong}</td>
+                        <td class="py-3 px-3 sm:px-4 text-center text-slate-600">${stats.totalUnanswered}</td>
+                        <td class="py-3 px-3 sm:px-4 text-center">${formatIndoDecimal(stats.accuracyPct, 1)}%</td>
+                        <td class="py-3 px-3 sm:px-4 text-right text-gold-700 text-base">${formatIndoDecimal(stats.finalScore, 2)}</td>
+                    </tr>
+                `;
+            }
+
+            /* =================================================================
+             * EVENT LISTENERS (KLIK, SENTUH, & SHORTCUT KEYBOARD)
+             * ================================================================= */
+            function bindEvents() {
+                // Tombol Mulai Tes pada Halaman Awal
+                dom.btnStartExam.addEventListener('click', startExamSession);
+
+                // Tombol Jawaban A, B, C, D, E (mendukung klik & sentuh)
+                dom.answerButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const opt = btn.getAttribute('data-option');
+                        submitAnswer(opt);
+                    });
+                });
+
+                // Kontrol Penguji: Lewati Kolom
+                dom.btnSkipColumn.addEventListener('click', () => {
+                    const colNum = state.currentColIdx + 1;
+                    const isLast = colNum >= TOTAL_COLUMNS;
+                    openConfirmModal(
+                        `Lewati Kolom ${colNum}?`,
+                        isLast
+                            ? 'Ini adalah kolom terakhir (Kolom 10). Sisa soal yang belum dijawab akan dihitung kosong (0 poin) dan tes langsung menampilkan Laporan Skor.'
+                            : `Sisa soal yang belum dijawab pada Kolom ${colNum} akan dihitung kosong (0 poin), lalu sistem beralih ke Kolom ${colNum + 1}.`,
+                        isLast ? 'Selesaikan Tes' : 'Lewati Kolom',
+                        () => handleColumnFinished('Kolom Dilewati Penguji')
+                    );
+                });
+
+                // Kontrol Penguji: Selesaikan & Lihat Skor
+                dom.btnFinishEarly.addEventListener('click', () => {
+                    openConfirmModal(
+                        'Selesaikan Tes & Lihat Skor?',
+                        'Seluruh soal yang belum dijawab pada kolom saat ini maupun kolom berikutnya akan dinilai 0 poin. Laporan evaluasi lengkap akan langsung ditampilkan.',
+                        'Ya, Lihat Skor Akhir',
+                        () => finishExamAndShowResults()
+                    );
+                });
+
+                // Tombol Lanjut Sekarang pada layar jeda 3 detik
+                dom.btnBreakContinue.addEventListener('click', proceedToNextColumn);
+
+                // Tombol Modal Konfirmasi
+                dom.modalBtnCancel.addEventListener('click', () => closeConfirmModal(true));
+                dom.modalBtnOk.addEventListener('click', () => {
+                    const action = state.pendingModalAction;
+                    closeConfirmModal(false);
+                    if (typeof action === 'function') action();
+                });
+
+                // Tombol Cetak PDF & Mulai Simulasi Baru
+                dom.btnPrintReport.addEventListener('click', () => window.print());
+                dom.btnRestartExam.addEventListener('click', () => {
+                    stopColumnTimer();
+                    stopBreakTimer();
+                    showScreen('start');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+
+                // Shortcut Keyboard Global (A-E dan 1-5 saat ujian, Enter/Space saat jeda)
+                document.addEventListener('keydown', (e) => {
+                    // Abaikan jika tombol ditahan terus-menerus atau fokus sedang di input teks
+                    if (e.repeat) return;
+                    const tag = e.target.tagName;
+                    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+                    // Jika modal konfirmasi terbuka, Escape menutup modal
+                    if (!dom.modalConfirm.classList.contains('hidden')) {
+                        if (e.key === 'Escape') {
+                            e.preventDefault();
+                            closeConfirmModal(true);
+                        }
+                        return;
+                    }
+
+                    // Saat layar jeda antar kolom aktif
+                    if (state.phase === 'break') {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            proceedToNextColumn();
+                        }
+                        return;
+                    }
+
+                    // Saat ujian aktif: Petakan A-E dan 1-5 ke pilihan jawaban
+                    if (state.phase === 'exam' && !state.isPaused) {
+                        const keyMap = {
+                            a: 'A', '1': 'A',
+                            b: 'B', '2': 'B',
+                            c: 'C', '3': 'C',
+                            d: 'D', '4': 'D',
+                            e: 'E', '5': 'E'
+                        };
+                        const mappedOption = keyMap[e.key.toLowerCase()];
+                        if (mappedOption) {
+                            e.preventDefault();
+                            // Berikan umpan balik visual singkat pada tombol terkait
+                            const targetBtn = dom.answerButtons.find(b => b.getAttribute('data-option') === mappedOption);
+                            if (targetBtn) {
+                                targetBtn.classList.add('key-pressed');
+                                setTimeout(() => targetBtn.classList.remove('key-pressed'), 90);
+                            }
+                            submitAnswer(mappedOption);
+                        }
+                    }
+                });
+            }
+
+            /* =================================================================
+             * INISIALISASI APLIKASI
+             * ================================================================= */
+            window.addEventListener('DOMContentLoaded', () => {
+                bindEvents();
+                showScreen('start');
+            });
+        })();
+    </script>
+</body>
+</html>
